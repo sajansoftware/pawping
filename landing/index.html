@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PawPing — AI SMS Assistant for Veterinary Clinics</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #FAFAF8;
+  --surface: #FFFFFF;
+  --text: #1A1A1A;
+  --text-secondary: #5C5C5C;
+  --accent: #2B7A5F;
+  --accent-light: #E8F5EE;
+  --accent-hover: #236B52;
+  --warm: #F7F0E6;
+  --border: #E8E6E2;
+  --radius: 14px;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.06);
+  --shadow-md: 0 4px 20px rgba(0,0,0,0.06), 0 2px 8px rgba(0,0,0,0.04);
+  --shadow-lg: 0 12px 40px rgba(0,0,0,0.08), 0 4px 12px rgba(0,0,0,0.04);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Nav */
+nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  padding: 16px 32px;
+  background: rgba(250,250,248,0.85);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-family: 'Fraunces', serif;
+  font-weight: 700;
+  font-size: 1.5rem;
+  color: var(--accent);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.logo-icon {
+  width: 32px;
+  height: 32px;
+  background: var(--accent);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 18px;
+}
+
+.nav-cta {
+  background: var(--accent);
+  color: white;
+  padding: 10px 24px;
+  border-radius: 100px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+  border: none;
+  cursor: pointer;
+}
+
+.nav-cta:hover { background: var(--accent-hover); transform: translateY(-1px); }
+
+/* Hero */
+.hero {
+  padding: 140px 32px 80px;
+  max-width: 1100px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 16px;
+  background: var(--accent-light);
+  color: var(--accent);
+  border-radius: 100px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 28px;
+  animation: fadeUp 0.6s ease both;
+}
+
+.badge-dot {
+  width: 7px;
+  height: 7px;
+  background: var(--accent);
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+
+h1 {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(2.4rem, 5.5vw, 4rem);
+  font-weight: 700;
+  line-height: 1.15;
+  margin-bottom: 24px;
+  color: var(--text);
+  animation: fadeUp 0.6s ease 0.1s both;
+}
+
+h1 span { color: var(--accent); }
+
+.hero-sub {
+  font-size: clamp(1.05rem, 2vw, 1.25rem);
+  color: var(--text-secondary);
+  max-width: 600px;
+  margin: 0 auto 40px;
+  line-height: 1.7;
+  animation: fadeUp 0.6s ease 0.2s both;
+}
+
+/* Signup Form */
+.signup-form {
+  display: flex;
+  gap: 12px;
+  max-width: 480px;
+  margin: 0 auto;
+  animation: fadeUp 0.6s ease 0.3s both;
+}
+
+.signup-form input {
+  flex: 1;
+  padding: 14px 20px;
+  border: 2px solid var(--border);
+  border-radius: 100px;
+  font-size: 1rem;
+  font-family: 'DM Sans', sans-serif;
+  outline: none;
+  transition: border-color 0.2s;
+  background: var(--surface);
+}
+
+.signup-form input:focus { border-color: var(--accent); }
+
+.signup-form button {
+  padding: 14px 32px;
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 100px;
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: 'DM Sans', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.signup-form button:hover { background: var(--accent-hover); transform: translateY(-1px); }
+
+.form-note {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin-top: 14px;
+  animation: fadeUp 0.6s ease 0.4s both;
+}
+
+/* Phone Mockup */
+.mockup-section {
+  max-width: 900px;
+  margin: 70px auto 0;
+  animation: fadeUp 0.8s ease 0.4s both;
+}
+
+.phone-frame {
+  background: var(--surface);
+  border-radius: 24px;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-lg);
+  padding: 32px 24px;
+  max-width: 380px;
+  margin: 0 auto;
+}
+
+.phone-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.phone-avatar {
+  width: 40px;
+  height: 40px;
+  background: var(--accent-light);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+}
+
+.phone-contact {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.phone-contact-sub {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+}
+
+.sms-thread { display: flex; flex-direction: column; gap: 12px; }
+
+.sms {
+  padding: 12px 16px;
+  border-radius: 18px;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  max-width: 85%;
+  animation: msgIn 0.4s ease both;
+}
+
+.sms-in {
+  background: #E9ECEF;
+  color: var(--text);
+  align-self: flex-start;
+  border-bottom-left-radius: 6px;
+}
+
+.sms-out {
+  background: var(--accent);
+  color: white;
+  align-self: flex-end;
+  border-bottom-right-radius: 6px;
+}
+
+.sms:nth-child(1) { animation-delay: 0.6s; }
+.sms:nth-child(2) { animation-delay: 1.2s; }
+.sms:nth-child(3) { animation-delay: 1.8s; }
+.sms:nth-child(4) { animation-delay: 2.4s; }
+
+/* Problem Section */
+.problem {
+  padding: 100px 32px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.section-label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--accent);
+  margin-bottom: 16px;
+}
+
+h2 {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 20px;
+}
+
+.problem-text {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  max-width: 650px;
+  line-height: 1.7;
+}
+
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 24px;
+  margin-top: 48px;
+}
+
+.stat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 28px;
+  text-align: center;
+  box-shadow: var(--shadow-sm);
+}
+
+.stat-number {
+  font-family: 'Fraunces', serif;
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 6px;
+}
+
+.stat-desc {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+/* How it Works */
+.how-it-works {
+  padding: 80px 32px 100px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.steps {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 32px;
+  margin-top: 48px;
+}
+
+.step {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 32px 28px;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.3s;
+}
+
+.step:hover { box-shadow: var(--shadow-md); transform: translateY(-4px); }
+
+.step-num {
+  width: 36px;
+  height: 36px;
+  background: var(--accent-light);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  color: var(--accent);
+  font-size: 0.9rem;
+  margin-bottom: 18px;
+}
+
+.step h3 {
+  font-family: 'Fraunces', serif;
+  font-size: 1.15rem;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.step p {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* Features */
+.features {
+  padding: 80px 32px 100px;
+  background: var(--warm);
+}
+
+.features-inner {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 24px;
+  margin-top: 48px;
+}
+
+.feature {
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: 28px;
+  box-shadow: var(--shadow-sm);
+}
+
+.feature-icon {
+  width: 44px;
+  height: 44px;
+  background: var(--accent-light);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  margin-bottom: 16px;
+}
+
+.feature h3 {
+  font-weight: 600;
+  font-size: 1.05rem;
+  margin-bottom: 8px;
+}
+
+.feature p {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* Pricing */
+.pricing {
+  padding: 100px 32px;
+  max-width: 900px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.price-card {
+  background: var(--surface);
+  border: 2px solid var(--accent);
+  border-radius: 20px;
+  padding: 48px 40px;
+  max-width: 420px;
+  margin: 48px auto 0;
+  box-shadow: var(--shadow-md);
+}
+
+.price-amount {
+  font-family: 'Fraunces', serif;
+  font-size: 3.5rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.price-amount span {
+  font-size: 1.1rem;
+  font-weight: 400;
+  color: var(--text-secondary);
+}
+
+.price-desc {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  margin: 8px 0 28px;
+}
+
+.price-features {
+  list-style: none;
+  text-align: left;
+  margin-bottom: 32px;
+}
+
+.price-features li {
+  padding: 10px 0;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.price-features li:last-child { border-bottom: none; }
+
+.check {
+  width: 22px;
+  height: 22px;
+  background: var(--accent-light);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent);
+  font-size: 13px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.price-cta {
+  display: block;
+  width: 100%;
+  padding: 16px;
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 100px;
+  font-size: 1.05rem;
+  font-weight: 600;
+  font-family: 'DM Sans', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.price-cta:hover { background: var(--accent-hover); transform: translateY(-1px); }
+
+.price-guarantee {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  margin-top: 16px;
+}
+
+/* Final CTA */
+.final-cta {
+  padding: 100px 32px;
+  background: var(--accent);
+  text-align: center;
+  color: white;
+}
+
+.final-cta h2 {
+  color: white;
+  margin-bottom: 16px;
+}
+
+.final-cta p {
+  color: rgba(255,255,255,0.8);
+  font-size: 1.1rem;
+  max-width: 500px;
+  margin: 0 auto 36px;
+}
+
+.final-form {
+  display: flex;
+  gap: 12px;
+  max-width: 440px;
+  margin: 0 auto;
+}
+
+.final-form input {
+  flex: 1;
+  padding: 14px 20px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-radius: 100px;
+  font-size: 1rem;
+  font-family: 'DM Sans', sans-serif;
+  background: rgba(255,255,255,0.1);
+  color: white;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.final-form input::placeholder { color: rgba(255,255,255,0.5); }
+.final-form input:focus { border-color: white; }
+
+.final-form button {
+  padding: 14px 32px;
+  background: white;
+  color: var(--accent);
+  border: none;
+  border-radius: 100px;
+  font-size: 1rem;
+  font-weight: 700;
+  font-family: 'DM Sans', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.final-form button:hover { transform: translateY(-1px); box-shadow: var(--shadow-md); }
+
+/* Footer */
+footer {
+  padding: 32px;
+  text-align: center;
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  border-top: 1px solid var(--border);
+}
+
+/* Animations */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+@keyframes msgIn {
+  from { opacity: 0; transform: translateY(10px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+  nav { padding: 14px 20px; }
+  .hero { padding: 120px 20px 60px; }
+  .signup-form { flex-direction: column; }
+  .signup-form button { width: 100%; }
+  .final-form { flex-direction: column; }
+  .final-form button { width: 100%; }
+  .phone-frame { margin: 0 8px; }
+  .problem, .how-it-works, .pricing { padding: 60px 20px; }
+  .features { padding: 60px 20px; }
+  .price-card { padding: 36px 24px; }
+  .final-cta { padding: 60px 20px; }
+}
+</style>
+</head>
+<body>
+
+<!-- Nav -->
+<nav>
+  <a href="#" class="logo">
+    <div class="logo-icon">🐾</div>
+    PawPing
+  </a>
+  <a href="#pricing" class="nav-cta">Start Free Trial</a>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="badge"><div class="badge-dot"></div> Built for veterinary clinics</div>
+  <h1>Stop losing clients to <span>missed calls</span></h1>
+  <p class="hero-sub">PawPing instantly texts back every missed call with an AI-powered SMS assistant — so pet parents book appointments instead of calling your competitor.</p>
+
+  <form class="signup-form" onsubmit="event.preventDefault(); handleSignup(this);">
+    <input type="email" placeholder="Enter your clinic email" required>
+    <button type="submit">Start Free Trial</button>
+  </form>
+  <p class="form-note">Free for 30 days. No credit card required.</p>
+
+  <!-- Phone Mockup -->
+  <div class="mockup-section">
+    <div class="phone-frame">
+      <div class="phone-header">
+        <div class="phone-avatar">🐾</div>
+        <div>
+          <div class="phone-contact">PawPing Assistant</div>
+          <div class="phone-contact-sub">Sunny Paws Veterinary</div>
+        </div>
+      </div>
+      <div class="sms-thread">
+        <div class="sms sms-in">Hi! Thanks for calling Sunny Paws Veterinary. 🐾 Sorry we missed you — how can we help? Reply APPT to book, REFILL for meds, or just tell us what you need!</div>
+        <div class="sms sms-out">APPT — my dog needs his vaccines updated</div>
+        <div class="sms sms-in">Great! We have openings tomorrow at 10am or 2:30pm. Which works better for you and your pup? 🐕</div>
+        <div class="sms sms-out">2:30 works! His name is Cooper</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Problem -->
+<section class="problem">
+  <div class="section-label">The Problem</div>
+  <h2>Your front desk can't answer every call. Your competitors can.</h2>
+  <p class="problem-text">Vet clinics handle 80–120 calls a day. When your team is busy with patients, calls go to voicemail — and pet parents hang up and call the next clinic on Google. Every missed call is a missed appointment.</p>
+
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-number">27%</div>
+      <div class="stat-desc">of calls to small businesses go unanswered</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">80%</div>
+      <div class="stat-desc">of callers won't leave a voicemail — they just move on</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">$3K+</div>
+      <div class="stat-desc">in lost revenue per week from missed appointments</div>
+    </div>
+  </div>
+</section>
+
+<!-- How It Works -->
+<section class="how-it-works">
+  <div class="section-label">How It Works</div>
+  <h2>Three steps. Five minutes to set up.</h2>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <h3>Connect your line</h3>
+      <p>Forward your missed calls to PawPing. Takes under 5 minutes — no hardware, no software to install.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <h3>AI texts them back</h3>
+      <p>Within seconds of a missed call, your client gets a friendly, personalized text from your clinic — not a generic bot message.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <h3>Appointments get booked</h3>
+      <p>The AI handles the conversation — scheduling, refill requests, urgent care routing — and your front desk gets a summary.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Features -->
+<section class="features">
+  <div class="features-inner">
+    <div class="section-label">Features</div>
+    <h2>Everything your front desk wishes it had</h2>
+
+    <div class="feature-grid">
+      <div class="feature">
+        <div class="feature-icon">⚡</div>
+        <h3>Instant Missed-Call Text-Back</h3>
+        <p>Every missed call triggers a personalized SMS within 5 seconds. No more lost leads to voicemail.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">📅</div>
+        <h3>AI Appointment Booking</h3>
+        <p>Clients book directly via text. PawPing checks availability and confirms — your staff just sees it on the calendar.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">💉</div>
+        <h3>Vaccine & Wellness Reminders</h3>
+        <p>"Bella is due for her rabies booster!" Automated reminders that bring patients back without your team lifting a finger.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">🔔</div>
+        <h3>Appointment Reminders</h3>
+        <p>48-hour and 2-hour SMS reminders with one-tap confirm or cancel. Cut no-shows by up to 40%.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">🚨</div>
+        <h3>Urgent Care Routing</h3>
+        <p>If a pet parent texts about an emergency, PawPing flags it immediately and routes to your on-call team.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">📊</div>
+        <h3>Simple Dashboard</h3>
+        <p>See every conversation, booked appointment, and recovered call in one clean view. No training needed.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Pricing -->
+<section class="pricing" id="pricing">
+  <div class="section-label">Pricing</div>
+  <h2>One plan. No surprises.</h2>
+
+  <div class="price-card">
+    <div class="price-amount">$99<span>/mo</span></div>
+    <p class="price-desc">Per location. Cancel anytime.</p>
+
+    <ul class="price-features">
+      <li><span class="check">✓</span> Unlimited missed-call text-backs</li>
+      <li><span class="check">✓</span> AI-powered SMS conversations</li>
+      <li><span class="check">✓</span> Appointment booking via text</li>
+      <li><span class="check">✓</span> Vaccine & wellness reminders</li>
+      <li><span class="check">✓</span> Appointment reminders (48hr + 2hr)</li>
+      <li><span class="check">✓</span> Urgent care routing</li>
+      <li><span class="check">✓</span> Dashboard & analytics</li>
+    </ul>
+
+    <button class="price-cta" onclick="document.querySelector('.signup-form input').focus(); window.scrollTo({top:0,behavior:'smooth'});">Start 30-Day Free Trial</button>
+    <p class="price-guarantee">No credit card required. If it doesn't book 5 appointments in 30 days, walk away.</p>
+  </div>
+</section>
+
+<!-- Final CTA -->
+<section class="final-cta">
+  <h2>Your next missed call is someone else's new client.</h2>
+  <p>Set up PawPing in 5 minutes and never lose a pet parent to voicemail again.</p>
+
+  <form class="final-form" onsubmit="event.preventDefault(); handleSignup(this);">
+    <input type="email" placeholder="Enter your clinic email" required>
+    <button type="submit">Start Free Trial</button>
+  </form>
+</section>
+
+<!-- Footer -->
+<footer>
+  © 2026 PawPing. Built for veterinary clinics that care about every call.
+</footer>
+
+<script>
+function handleSignup(form) {
+  const email = form.querySelector('input').value;
+  if (email) {
+    form.querySelector('button').textContent = '✓ You\'re in!';
+    form.querySelector('button').style.background = '#1a5c42';
+    form.querySelector('input').value = '';
+    setTimeout(() => {
+      form.querySelector('button').textContent = 'Start Free Trial';
+      form.querySelector('button').style.background = '';
+    }, 3000);
+  }
+}
+
+// Intersection Observer for scroll animations
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.style.animation = 'fadeUp 0.6s ease both';
+      observer.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.15 });
+
+document.querySelectorAll('.stat-card, .step, .feature, .price-card').forEach(el => {
+  el.style.opacity = '0';
+  observer.observe(el);
+});
+</script>
+
+</body>
+</html>

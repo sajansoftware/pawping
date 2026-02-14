@@ -1,0 +1,18 @@
+{
+  "name": "pawping",
+  "version": "1.0.0",
+  "description": "AI SMS assistant for veterinary clinics — handles missed calls via Twilio + Claude",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "keywords": [],
+  "license": "ISC",
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.39.0",
+    "dotenv": "^17.3.1",
+    "express": "^4.21.0",
+    "twilio": "^5.4.0"
+  }
+}
